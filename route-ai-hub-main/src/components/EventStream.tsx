@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Activity, MapPin, Clock, TrendingUp } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -17,6 +18,7 @@ interface RoutingEvent {
 
 const EventStream = () => {
   const [events, setEvents] = useState<RoutingEvent[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Connect to SSE endpoint
@@ -26,6 +28,7 @@ const EventStream = () => {
     eventSource.onmessage = (event) => {
       const newEvent = JSON.parse(event.data);
       setEvents((prev) => [newEvent, ...prev].slice(0, 50)); // Keep last 50 events
+      setIsLoading(false);
     };
 
     eventSource.onerror = () => {
@@ -46,6 +49,7 @@ const EventStream = () => {
       if (response.ok) {
         const data = await response.json();
         setEvents(data);
+        setIsLoading(false);
       }
     } catch (error) {
       console.log("Using demo data");
@@ -72,6 +76,7 @@ const EventStream = () => {
           explanation: "Facility offers specialized testing with fast turnaround.",
         },
       ]);
+      setIsLoading(false);
     }
   };
 
@@ -100,6 +105,26 @@ const EventStream = () => {
 
       <ScrollArea className="h-[600px] pr-4">
         <div className="space-y-3">
+          {isLoading && (
+            <div className="space-y-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="p-4 rounded-lg bg-card animate-fade-in">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Skeleton className="h-4 w-20" />
+                      <Skeleton className="h-5 w-16" />
+                    </div>
+                    <Skeleton className="h-5 w-12" />
+                  </div>
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-40" />
+                    <Skeleton className="h-4 w-64" />
+                    <Skeleton className="h-3 w-full" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
           {events.map((event, index) => (
             <div
               key={event.id}

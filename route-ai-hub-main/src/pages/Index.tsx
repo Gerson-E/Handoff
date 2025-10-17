@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import StatCard from "@/components/StatCard";
 import EventStream from "@/components/EventStream";
 import { Activity, MapPin, TrendingUp, Clock, Plus } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -22,10 +23,13 @@ const Index = () => {
                 <p className="text-sm text-muted-foreground">Smart Request Routing</p>
               </div>
             </div>
-            <Button onClick={() => navigate("/submit")} className="shadow-glow">
-              <Plus className="mr-2 h-4 w-4" />
-              Submit Request
-            </Button>
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <Button onClick={() => navigate("/submit")} className="shadow-glow">
+                <Plus className="mr-2 h-4 w-4" />
+                Submit Request
+              </Button>
+            </div>
           </div>
         </div>
       </header>

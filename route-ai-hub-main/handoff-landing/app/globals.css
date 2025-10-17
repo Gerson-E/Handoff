@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --medical-blue: #0F5FFF;
+  --teal: #0DB7A8;
+  --ink: #0B1220;
+  --slate: #6B7280;
+  --bg: #0A0F1C;
+}
+
+html, body {
+  height: 100%;
+}
+
+/* Premium background: dark navy + subtle noise + soft radial gradients with motion-safe parallax */
+body { background-color: var(--bg); color: white; }
+
+.font-heading { font-family: var(--font-heading), ui-sans-serif, system-ui; }
+.font-body { font-family: var(--font-body), ui-sans-serif, system-ui; }
+
+/* tabular-nums utility */
+.tabular-nums { font-variant-numeric: tabular-nums; }
+
+.btn-gradient {
+  @apply bg-gradient-to-r from-[var(--medical-blue)] to-[var(--teal)] text-white hover:opacity-95 focus-visible:ring-2 focus-visible:ring-white/40 shadow-soft;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+
