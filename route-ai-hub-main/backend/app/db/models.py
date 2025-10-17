@@ -17,6 +17,9 @@ class Facility(Base):
     lon: Mapped[float] = mapped_column(Float)
     supported_services: Mapped[dict] = mapped_column(JSON, default=dict)
     capacity_score: Mapped[float] = mapped_column(Float, default=0.0)
+    address: Mapped[str | None] = mapped_column(String, nullable=True)
+    phone: Mapped[str | None] = mapped_column(String, nullable=True)
+    hours: Mapped[str | None] = mapped_column(String, nullable=True)
 
     __table_args__ = (
         Index("ix_facilities_type_active", "type", "is_active"),

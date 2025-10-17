@@ -2,6 +2,10 @@ from __future__ import annotations
 
 import os
 from functools import lru_cache
+from dotenv import load_dotenv, find_dotenv
+
+# Load environment variables from .env if present (searches upwards)
+load_dotenv(find_dotenv(), override=False)
 
 
 class Settings:

@@ -92,6 +92,7 @@ async def seed_basic(session: AsyncSession) -> None:
 async def create_all(engine_in: AsyncEngine | None = None) -> None:
     eng = engine_in or engine
     async with eng.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)  # Drop old tables
         await conn.run_sync(Base.metadata.create_all)
 
 

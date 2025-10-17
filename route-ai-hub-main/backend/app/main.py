@@ -14,6 +14,7 @@ from .api.directory_router import router as directory_router
 from .api.patient_router import router as patient_router
 from .core.logging import configure_logging
 from .core.metrics import RequestTimingMiddleware
+import logging, os
 
 
 def create_app() -> FastAPI:
@@ -45,5 +46,10 @@ def create_app() -> FastAPI:
 
 
 app = create_app()
+
+# Log auth settings on startup
+logger = logging.getLogger("uvicorn")
+api_key = (os.getenv("API_KEY") or "").strip()
+logger.info("Auth required: %s, API_KEY len=%d", bool(api_key), len(api_key))
 
 

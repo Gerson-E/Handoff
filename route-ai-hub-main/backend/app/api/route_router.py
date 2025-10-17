@@ -33,11 +33,17 @@ class RouteResponse(BaseModel):
     route_to_facility_id: str
     route_to_endpoint: str
     confidence: float
-    decision_status: Optional[str] = Field(default=None)
+    decision_status: str
     reason: Optional[str] = None
     features_used: Optional[Dict[str, float]] = None
     decision_id: str
     ttl_seconds: Optional[int] = Field(default=3600)
+    explanation: Optional[str] = None
+    resolved_request_type: Optional[str] = None
+    facility_name: Optional[str] = None
+    address: Optional[str] = None
+    phone: Optional[str] = None
+    hours: Optional[str] = None
 
 
 @router.post("/route", response_model=RouteResponse, summary="Route a clinical request")
@@ -69,13 +75,15 @@ async def route_request(
     req_type = body.request_type
     if not req_type and settings.ai_classify and (body.free_text or ""):
         req_type = classify_request_text(body.free_text or "")
+    
+    resolved_type = req_type
 
     # Decide route
     decision = await decide_route(
         db,
         {
             "patient_id": body.patient_id,
-            "request_type": req_type,
+            "request_type": resolved_type,
             "department": body.department,
             "urgency": body.urgency,
             "location_hint": body.location_hint,
@@ -85,6 +93,7 @@ async def route_request(
     )
 
     # Optional AI explanation
+    explanation = None
     if settings.ai_explain:
         # find facility name for prompt context
         fac_ext = decision.get("route_to_facility_id")
@@ -94,16 +103,25 @@ async def route_request(
             fac = fac_row.scalar_one_or_none()
             if fac:
                 fac_name = fac.name
-        decision["reason"] = explain_decision(body.patient_id, fac_name or "", decision.get("features_used", {}))
+        explanation = explain_decision(body.patient_id, fac_name or "", decision.get("features_used", {}))
+        decision["reason"] = explanation
 
     # Persist event
     routed_facility_internal_id = None
+    facility_name = None
+    address = None
+    phone = None
+    hours = None
     if decision.get("route_to_facility_id"):
         fac_row = await db.execute(
             select(Facility).where(Facility.external_id == decision["route_to_facility_id"]).limit(1)
         )
         fac = fac_row.scalar_one_or_none()
         routed_facility_internal_id = fac.id if fac else None
+        facility_name = fac.name if fac else None
+        address = fac.address if fac else None
+        phone = fac.phone if fac else None
+        hours = fac.hours if fac else None
 
     ev = Event(
         patient_id=patient.id,
@@ -118,6 +136,24 @@ async def route_request(
     # Metrics
     get_metrics().record_decision(decision.get("decision_status", "failed"), float(decision.get("confidence", 0.0)))
 
-    return RouteResponse(**decision)
+    # Filter out composite from features for API response
+    features_for_response = {k: v for k, v in (decision.get("features_used") or {}).items() if k != "composite"}
+
+    return RouteResponse(
+        route_to_facility_id=decision.get("route_to_facility_id", ""),
+        route_to_endpoint=decision.get("route_to_endpoint", ""),
+        confidence=float(decision.get("confidence", 0.0)),
+        decision_status=decision.get("decision_status", "failed"),
+        reason=decision.get("reason"),
+        features_used=features_for_response,
+        decision_id=decision.get("decision_id", ""),
+        ttl_seconds=decision.get("ttl_seconds", 3600),
+        explanation=explanation,
+        resolved_request_type=resolved_type,
+        facility_name=facility_name,
+        address=address,
+        phone=phone,
+        hours=hours,
+    )
 
 
