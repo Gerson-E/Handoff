@@ -3,7 +3,7 @@ import Hero from '@/components/Hero';
 import Features from '@/components/Features';
 import Issues from '@/components/Issues';
 import WhatWeDo from '@/components/WhatWeDo';
-import CodeSnippet from '@/components/CodeSnippet';
+import IssuesSection from '@/components/sections/Issues';
 import SectionSeparator from '@/components/SectionSeparator';
 
 export default function HomePage() {
@@ -18,7 +18,7 @@ export default function HomePage() {
       <SectionSeparator />
       <WhatWeDo />
       <SectionSeparator />
-      <CodeSnippet />
+      <IssuesSection />
     </main>
   );
 }
