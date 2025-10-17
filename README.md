@@ -1,34 +1,30 @@
-Handoff – AI-Powered Smart Request Routing for Healthcare
+**Handoff** – AI-Powered Smart Request Routing for Healthcare
 Team Members
 
 Gerson Estrada – Backend Engineer (FastAPI, Claude Integration)
 
 Toshi Nagai – Frontend Engineer (Next.js, Dashboard Design)
 
-Project Title
-
+Project Title:
 Handoff: Intelligent Clinical Request Routing Engine
 
-Summary
-The Problem
+**Summary**
+**The Problem**
 
 Hospitals lose millions each year due to misrouted or delayed clinical requests.
 Examples include:
 
 Imaging orders sent to the wrong facility
-
 Referrals that never reach specialists
-
 Lab samples shipped to the wrong campus
-
 These issues occur because of inconsistent patient identifiers, legacy EHR formats, and manual routing processes. The result is slower turnaround times, increased administrative work, and fragmented patient records.
 
-The Solution
+**The Solution**
 
 Handoff automates clinical request routing using AI.
 It receives a clinical request, classifies it, and routes it to the most appropriate facility based on data such as proximity, capacity, and patient history.
 
-How it works:
+**How it works:**
 
 Ingest Request: Accepts structured or unstructured requests.
 
@@ -42,7 +38,7 @@ Visualize in Real Time: The frontend dashboard displays live routing events and 
 
 This creates an explainable and efficient routing system for healthcare operations.
 
-How AI Is Used
+**How AI Is Used**
 
 Request Classification (Claude 3.5 Haiku):
 Converts unstructured text into standardized request types such as imaging, lab, or referral.
@@ -53,16 +49,16 @@ Produces clinician-readable rationales for routing decisions.
 Confidence Scoring (Optional):
 Combines AI outputs with heuristic facility metrics to calculate a confidence level for each routing decision.
 
-Tech Stack
+**Tech Stack**
 
 Backend: FastAPI, SQLite, SQLAlchemy, Pydantic, Anthropic Claude
 Frontend: Next.js (Vite), TailwindCSS, TypeScript
 AI: Anthropic Claude 3.5 Haiku (classification and explanation)
 Data Layer: Mock Verato-style patient and facility data
 
-Example API Call
+**Example API Call
 
-POST /route
+POST /route**
 
 {
   "patient_id": "patient-00000",
@@ -71,7 +67,7 @@ POST /route
 }
 
 
-Response
+**Response**
 
 {
   "route_to_facility_id": "facility-004",
@@ -81,7 +77,7 @@ Response
   "resolved_request_type": "imaging"
 }
 
-Key Backend Files
+**Key Backend Files**
 File	Description
 app/api/route_router.py	Core routing endpoint logic
 app/services/llm_classifier.py	AI-based request classification
@@ -96,12 +92,12 @@ Live routing decisions stream to the dashboard using Server-Sent Events (SSE).
 
 All data used for routing is mock data representative of real hospital systems.
 
-Impact
+**Impact**
 
 Handoff reduces routing errors, saves time, and improves coordination between healthcare facilities.
 By combining structured scoring with explainable AI, it delivers a transparent, auditable solution to one of the most persistent inefficiencies in clinical operations.
 
-Key Files for Review
+**Key Files for Review**
 
 If the repository is not fully polished, focus on:
 
