@@ -1,27 +1,40 @@
-# Logs
-logs
+# --- Node / Next.js ---
+node_modules/
+.next/
+out/
+dist/
+.vercel/
+.vscode/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
-
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
 
-# Next.js
-.next\/nhandoff-landing/.next/
+# --- App Router types cache (Next.js) ---
+.next/types/
+
+# --- Frontend build artifacts ---
+coverage/
+
+# --- Python / Backend ---
+backend/.venv/
+backend/__pycache__/
+backend/.pytest_cache/
+backend/*.sqlite3
+backend/*.db
+backend/.env
+backend/.coverage
+backend/.mypy_cache/
+backend/.ruff_cache/
+
+# --- General ---
+*.swp
+*.swo
+*.tmp
+Thumbs.db
