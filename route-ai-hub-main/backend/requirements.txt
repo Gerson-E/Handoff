@@ -1,0 +1,9 @@
+uvicorn[standard]
+fastapi
+sqlalchemy[asyncio]
+aiosqlite
+pydantic>=2
+python-dotenv
+orjson
+httpx
+anthropic
