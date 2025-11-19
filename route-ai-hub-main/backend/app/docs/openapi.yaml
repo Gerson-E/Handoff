@@ -1,0 +1,88 @@
+openapi: 3.0.3
+info:
+  title: Handoff Smart Router API
+  version: 0.1.0
+servers: [{ url: http://localhost:8000 }]
+paths:
+  /route:
+    post:
+      summary: Route a clinical request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RouteRequest'
+      responses:
+        '200':
+          description: Routing decision
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteResponse'
+  /events:
+    get:
+      parameters:
+        - in: query
+          name: limit
+          schema: { type: integer, default: 100 }
+      responses:
+        '200':
+          description: Recent events
+  /events/stream:
+    get:
+      responses:
+        '200': { description: Server-Sent Events stream }
+  /fhir/ServiceRequest:
+    post:
+      summary: FHIR adapter → /route
+      responses:
+        '200': { description: OperationOutcome with extension }
+  /facilities:
+    get:
+      responses:
+        '200': { description: Facility directory }
+  /patients/{id}:
+    get:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Patient profile }
+  /health:
+    get:
+      responses:
+        '200': { description: Healthcheck }
+  /metrics:
+    get:
+      responses:
+        '200': { description: Simple metrics }
+components:
+  schemas:
+    RouteRequest:
+      type: object
+      required: [patient_id]
+      properties:
+        patient_id: { type: string }
+        request_type: { type: string, nullable: true }
+        department:   { type: string, nullable: true }
+        urgency:      { type: string, nullable: true }
+        location_hint:{ type: string, nullable: true }
+        free_text:    { type: string, nullable: true }
+        intended_site:{ type: string, nullable: true }
+    RouteResponse:
+      type: object
+      required: [route_to_facility_id, route_to_endpoint, confidence, decision_id]
+      properties:
+        route_to_facility_id: { type: string }
+        route_to_endpoint:    { type: string }
+        confidence:           { type: number }
+        decision_status:      { type: string, enum: [routed, fallback, failed] }
+        reason:               { type: string }
+        features_used:
+          type: object
+          additionalProperties: { type: number }
+        decision_id:          { type: string }
+        ttl_seconds:          { type: integer, default: 3600 }

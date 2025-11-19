@@ -1,35 +1,33 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import { IBM_Plex_Sans, Source_Sans_3 } from "next/font/google";
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
+import { Toaster } from '@/src/components/ui/toaster';
+import DemoBanner from '@/components/DemoBanner';
 
-const heading = IBM_Plex_Sans({ subsets: ["latin"], weight: ["400", "600", "700"], variable: "--font-heading" });
-const body = Source_Sans_3({ subsets: ["latin"], variable: "--font-body" });
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "Handoff — AI Smart Request Routing for Healthcare",
-  description:
-    "Handoff is the identity-aware routing layer for healthcare. We read any clinical request and send it to the correct facility—instantly, with explainable AI.",
-  openGraph: {
-    title: "Handoff — AI Smart Request Routing for Healthcare",
-    description:
-      "Handoff is the identity-aware routing layer for healthcare. We read any clinical request and send it to the correct facility—instantly, with explainable AI.",
-    url: "https://handoff.example.com",
-    siteName: "Handoff",
-    type: "website",
-  },
-  icons: {
-    icon: "/favicon.ico",
-  },
+  title: 'Handoff - AI-Powered Smart Request Routing (Demo)',
+  description: 'Proof of concept: AI-powered Smart Request Routing for referrals, imaging, and labs.',
+  keywords: ['healthcare', 'AI', 'routing', 'referrals', 'FHIR', 'demo'],
+  authors: [{ name: 'Handoff Team' }],
+  viewport: 'width=device-width, initial-scale=1',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en" className={`scroll-smooth ${heading.variable} ${body.variable}`}>
-      <body className="min-h-screen antialiased font-[var(--font-body)]">
-        {children}
+    <html lang="en" className="dark">
+      <body className={inter.className}>
+        <DemoBanner />
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
+          {children}
+        </div>
+        <Toaster />
       </body>
     </html>
   );
 }
-
-

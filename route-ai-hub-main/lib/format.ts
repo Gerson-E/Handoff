@@ -1,16 +1,30 @@
-export function pct(n: number, digits = 0) {
-  if (n == null || isNaN(n)) return "–";
-  return `${(n * 100).toFixed(digits)}%`;
+export function formatConfidence(confidence: number): string {
+  return `${(confidence * 100).toFixed(1)}%`;
 }
 
-export function ms(n: number) {
-  if (n == null || isNaN(n)) return "–";
-  return `${Math.round(n)} ms`;
+export function formatDateTime(date: string | Date): string {
+  const d = new Date(date);
+  return d.toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 }
 
-export function fmtInt(n: number) {
-  if (n == null || isNaN(n)) return "–";
-  return new Intl.NumberFormat().format(Math.round(n));
+export function formatDate(date: string | Date): string {
+  const d = new Date(date);
+  return d.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
 }
 
-
+export function formatTime(date: string | Date): string {
+  const d = new Date(date);
+  return d.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}

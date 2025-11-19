@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { ArrowLeft, Send, Activity } from "lucide-react";
 
 const SubmitRequest = () => {
@@ -27,11 +27,12 @@ const SubmitRequest = () => {
     setIsSubmitting(true);
 
     try {
-      // Replace with your actual backend endpoint
-      const response = await fetch("http://localhost:8000/route", {
+      const apiBase = import.meta.env.VITE_API_BASE || "http://localhost:8000";
+      const response = await fetch(`${apiBase}/route`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "x-api-key": "dev-local",
         },
         body: JSON.stringify(formData),
       });
@@ -40,7 +41,7 @@ const SubmitRequest = () => {
         const result = await response.json();
         toast({
           title: "Request Submitted",
-          description: `Routed to facility ${result.route_to_facility_id} with ${(result.confidence * 100).toFixed(0)}% confidence`,
+          description: `Routed to ${result.facility_name || result.route_to_facility_id} (${(result.confidence * 100).toFixed(0)}% confidence)`,
         });
         navigate("/");
       } else {

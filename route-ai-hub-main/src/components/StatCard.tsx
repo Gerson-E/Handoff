@@ -1,43 +1,24 @@
-import { LucideIcon } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { Card } from './ui/card';
+import { ReactNode } from 'react';
 
 interface StatCardProps {
   title: string;
   value: string | number;
-  description?: string;
-  icon: LucideIcon;
-  trend?: {
-    value: string;
-    positive: boolean;
-  };
+  icon?: ReactNode;
+  trend?: string;
 }
 
-const StatCard = ({ title, value, description, icon: Icon, trend }: StatCardProps) => {
+export default function StatCard({ title, value, icon, trend }: StatCardProps) {
   return (
-    <Card className="p-6 bg-gradient-card hover:shadow-md transition-all duration-300">
+    <Card className="p-6 bg-gradient-card">
       <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <p className="text-sm font-medium text-muted-foreground">{title}</p>
-          <h3 className="text-3xl font-bold mt-2">{value}</h3>
-          {description && (
-            <p className="text-xs text-muted-foreground mt-1">{description}</p>
-          )}
-          {trend && (
-            <p
-              className={`text-sm font-medium mt-2 ${
-                trend.positive ? "text-secondary" : "text-destructive"
-              }`}
-            >
-              {trend.positive ? "↑" : "↓"} {trend.value}
-            </p>
-          )}
+        <div>
+          <p className="text-sm text-muted-foreground">{title}</p>
+          <p className="text-2xl font-bold mt-2">{value}</p>
+          {trend && <p className="text-xs text-green-600 mt-1">{trend}</p>}
         </div>
-        <div className="p-3 rounded-xl bg-primary/10">
-          <Icon className="h-6 w-6 text-primary" />
-        </div>
+        {icon && <div className="text-primary opacity-50">{icon}</div>}
       </div>
     </Card>
   );
-};
-
-export default StatCard;
+}
