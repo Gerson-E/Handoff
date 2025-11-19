@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-from fastapi import APIRouter, Depends, Header, HTTPException, status
+from fastapi import APIRouter, Depends, Header, HTTPException, Request, status
 from pydantic import BaseModel, Field
 from typing import Dict, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -14,6 +14,7 @@ from ..domain.routing_engine import decide_route
 from ..ai.llm_classifier import classify_request_text
 from ..ai.llm_explainer import explain_decision
 from ..core.metrics import get_metrics
+from ..core.rate_limit import get_rate_limiter
 
 
 router = APIRouter()
@@ -49,10 +50,16 @@ class RouteResponse(BaseModel):
 @router.post("/route", response_model=RouteResponse, summary="Route a clinical request")
 async def route_request(
     body: RouteRequest,
+    request: Request,
     db: AsyncSession = Depends(get_db),
     idempotency_key: Optional[str] = Header(default=None, alias="Idempotency-Key"),
 ) -> RouteResponse:
     settings = get_settings()
+
+    # Rate limiting: Prevent abuse (20 requests per hour per IP)
+    rate_limiter = get_rate_limiter()
+    client_id = rate_limiter.get_client_id(request)
+    rate_limiter.check_rate_limit(client_id, max_requests=20, window_minutes=60)
 
     # Idempotency: if provided, return previous decision
     if idempotency_key:

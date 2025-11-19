@@ -82,3 +82,5 @@ tmp/
 temp/
 
 printf "\n# Next.js\n.next/\n# Node\nnode_modules/\n# Python venv\n.venv/\nvenv/\n# Env files\n.env\n.env.*\n!.env.example\n" >> .gitignore
+backend/.env
+.env.local
