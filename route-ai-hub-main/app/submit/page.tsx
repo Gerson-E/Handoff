@@ -1,16 +1,18 @@
+"use client";
+
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
+import { Button } from "@/src/components/ui/button";
+import { Card } from "@/src/components/ui/card";
+import { Input } from "@/src/components/ui/input";
+import { Label } from "@/src/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/src/components/ui/select";
+import { Textarea } from "@/src/components/ui/textarea";
+import { useToast } from "@/src/hooks/use-toast";
 import { ArrowLeft, Send, Activity } from "lucide-react";
 
-const SubmitRequest = () => {
-  const navigate = useNavigate();
+export default function SubmitRequestPage() {
+  const router = useRouter();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -27,7 +29,7 @@ const SubmitRequest = () => {
     setIsSubmitting(true);
 
     try {
-      const apiBase = import.meta.env.VITE_API_BASE || "http://localhost:8000";
+      const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
       const response = await fetch(`${apiBase}/route`, {
         method: "POST",
         headers: {
@@ -43,14 +45,15 @@ const SubmitRequest = () => {
           title: "Request Submitted",
           description: `Routed to ${result.facility_name || result.route_to_facility_id} (${(result.confidence * 100).toFixed(0)}% confidence)`,
         });
-        navigate("/");
+        router.push("/");
       } else {
-        throw new Error("Failed to submit request");
+        const errorData = await response.json();
+        throw new Error(errorData.detail || "Failed to submit request");
       }
     } catch (error) {
       toast({
         title: "Submission Failed",
-        description: "Could not connect to backend. Ensure your FastAPI server is running.",
+        description: error instanceof Error ? error.message : "Could not connect to backend. Ensure your FastAPI server is running.",
         variant: "destructive",
       });
     } finally {
@@ -63,11 +66,11 @@ const SubmitRequest = () => {
       <div className="container mx-auto px-4 py-8">
         <Button
           variant="ghost"
-          onClick={() => navigate("/")}
+          onClick={() => router.push("/")}
           className="mb-6"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Dashboard
+          Back to Home
         </Button>
 
         <div className="max-w-2xl mx-auto">
@@ -88,11 +91,12 @@ const SubmitRequest = () => {
                   <Label htmlFor="patient_id">Patient ID</Label>
                   <Input
                     id="patient_id"
-                    placeholder="e.g., V10001"
+                    placeholder="e.g., patient-00001"
                     value={formData.patient_id}
                     onChange={(e) => setFormData({ ...formData, patient_id: e.target.value })}
                     required
                   />
+                  <p className="text-xs text-muted-foreground">Use format: patient-00000 to patient-00099</p>
                 </div>
 
                 <div className="space-y-2">
@@ -185,6 +189,4 @@ const SubmitRequest = () => {
       </div>
     </div>
   );
-};
-
-export default SubmitRequest;
+}

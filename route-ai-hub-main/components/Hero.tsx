@@ -42,12 +42,7 @@ export default function Hero() {
           >
             <Button
               size="lg"
-              onClick={() => {
-                const demoSection = document.getElementById('demo-section');
-                if (demoSection) {
-                  demoSection.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
+              onClick={() => window.location.href = '/submit'}
               className="bg-primary hover:bg-primary/90 text-lg px-8 py-3"
             >
               Try Routing Demo

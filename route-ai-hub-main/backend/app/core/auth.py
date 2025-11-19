@@ -37,6 +37,12 @@ class APIKeyMiddleware:
     async def __call__(self, scope, receive, send):
         if scope["type"] != "http":
             return await self.app(scope, receive, send)
+
+        # Allow CORS preflight OPTIONS requests
+        method = scope.get("method", "")
+        if method == "OPTIONS":
+            return await self.app(scope, receive, send)
+
         path = scope.get("path") or ""
         if path in self.public_paths:
             return await self.app(scope, receive, send)
