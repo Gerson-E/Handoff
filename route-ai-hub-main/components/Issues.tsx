@@ -32,7 +32,7 @@ export default function Issues() {
     <section className="py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
@@ -50,7 +50,7 @@ export default function Issues() {
           {issues.map((issue, index) => (
             <motion.div
               key={issue.title}
-              initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+              initial={false}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
