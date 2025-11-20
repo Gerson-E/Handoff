@@ -25,14 +25,14 @@ export async function GET(request: NextRequest) {
     const stream = new ReadableStream({
       start(controller) {
         const reader = response.body?.getReader();
-        
+
         if (!reader) {
           controller.close();
           return;
         }
-        
+
         function pump(): Promise<void> {
-          return reader.read().then(({ done, value }) => {
+          return reader!.read().then(({ done, value }) => {
             if (done) {
               controller.close();
               return;

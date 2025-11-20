@@ -14,6 +14,8 @@ from .api.directory_router import router as directory_router
 from .api.patient_router import router as patient_router
 from .core.logging import configure_logging
 from .core.metrics import RequestTimingMiddleware
+from .db.seed import create_all, seed_basic
+from .db.session import SessionLocal
 import logging, os
 
 
@@ -46,6 +48,23 @@ def create_app() -> FastAPI:
 
 
 app = create_app()
+
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialize database on startup"""
+    logger = logging.getLogger("uvicorn")
+    logger.info("Initializing database...")
+
+    # Create all tables
+    await create_all()
+    logger.info("Database tables created")
+
+    # Seed with demo data if empty
+    async with SessionLocal() as session:
+        await seed_basic(session)
+    logger.info("Database seeded with demo data")
+
 
 # Log auth settings on startup
 logger = logging.getLogger("uvicorn")

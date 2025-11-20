@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Menu, X, ArrowRight } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -23,10 +24,14 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                <ArrowRight className="w-5 h-5 text-white" />
-              </div>
+            <Link href="/" className="flex items-center space-x-3">
+              <Image
+                src="/handoff-logo.png"
+                alt="Handoff Logo"
+                width={40}
+                height={40}
+                className="rounded-lg"
+              />
               <span className="text-xl font-bold text-foreground">Handoff</span>
             </Link>
           </div>

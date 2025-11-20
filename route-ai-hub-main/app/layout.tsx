@@ -12,6 +12,10 @@ export const metadata: Metadata = {
   keywords: ['healthcare', 'AI', 'routing', 'referrals', 'FHIR', 'demo'],
   authors: [{ name: 'Handoff Team' }],
   viewport: 'width=device-width, initial-scale=1',
+  icons: {
+    icon: '/handoff-logo.png',
+    apple: '/handoff-logo.png',
+  },
 };
 
 export default function RootLayout({

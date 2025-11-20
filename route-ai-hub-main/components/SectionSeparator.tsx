@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 export default function SectionSeparator() {
   return (
     <motion.div
-      initial={{ opacity: 0 }}
+      initial={false}
       whileInView={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
       viewport={{ once: true }}
